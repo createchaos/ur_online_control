@@ -1,0 +1,11 @@
+Metadata-Version: 1.0
+Name: ur-online-control
+Version: 0.0.1
+Summary: IP control package for UR robot
+Home-page: https://github.com/createchaos/ur_online_control
+Author: Romana Rust, Stefana Parascho, et al.
+Author-email: parascho@princeton.edu
+License: MIT license
+Description: UNKNOWN
+Keywords: UR robot control
+Platform: UNKNOWN
