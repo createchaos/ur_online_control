@@ -14,3 +14,6 @@ def is_available(ip):
         return True
     else:
         return False
+
+
+print(is_available("192.168.10.10"))

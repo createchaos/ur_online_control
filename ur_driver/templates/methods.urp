@@ -124,9 +124,9 @@ def read_and_identify():
 			elif msg_command_id == COMMAND_ID_MOVEJ:
 				# we must make a pose, because of URScript restrictions
 				params = socket_read_binary_integer(6 + 4)
-				BUFFER_JOINT[WRITE_PTR] = p[params[1]/(MM2M*MULT), params[2]/(MM2M*MULT), params[3]/(MM2M*MULT), params[4]/MULT, params[5]/MULT, params[6]/MULT]
-				# BUFFER_JOINT[WRITE_PTR] = p[params[1]/(MULT), params[2]/(MULT), params[3]/(MULT), params[4]/MULT, params[5]/MULT, params[6]/MULT]
-				BUFFER_PARAMS[WRITE_PTR] = p[params[7]/(MM2M*MULT), params[8]/(MM2M*MULT), params[9]/(MM2M*MULT), params[10]/MULT, 0, 0]
+				#BUFFER_JOINT[WRITE_PTR] = p[params[1]/(MM2M*MULT), params[2]/(MM2M*MULT), params[3]/(MM2M*MULT), params[4]/MULT, params[5]/MULT, params[6]/MULT]
+				BUFFER_JOINT[WRITE_PTR] = p[params[1]/(MULT), params[2]/(MULT), params[3]/(MULT), params[4]/MULT, params[5]/MULT, params[6]/MULT]
+				BUFFER_PARAMS[WRITE_PTR] = p[params[7]/(MM2M*MULT), params[8]/(MM2M*MULT), params[9]/(MM2M*MULT), params[10]/MULT, params[11], 0]
 			elif msg_command_id == COMMAND_ID_MOVEC:
 				params = socket_read_binary_integer(6 + 4)
 				# BUFFER_POSE[WRITE_PTR] = p[params[1]/(MM2M*MULT), params[2]/(MM2M*MULT), params[3]/(MM2M*MULT), params[4]/MULT, params[5]/MULT, params[6]/MULT]
@@ -214,28 +214,14 @@ def my_movel(pose, acc, vel, rad, time):
 	end
 end
 
-def my_movej(joints, acc, vel, rad, time):
-	textmsg("joints")
-	textmsg(joints)
-	#if vel != 0:
-	#	if rad != 0:
-	#		movej(joints, v=vel, r=rad)
-	#	else:
-	#		if acc != 0:
-	#			movej(joints, v=vel, a=acc)
-	#			movej(joints, v=vel)
-	#		end
-	#	end
-	#else: # time != 0:
-	#	if rad != 0:
-	#		movej(joints, r=rad, t=time)
-	#	else:
-	#		movej(joints, t=time)
-	#	end
-	#end
-	joints_pose = p[joints[0], joints[1], joints[2], joints[3], joints[4], joints[5]]
-	movej(joints_pose, v=vel)
+def my_movej(joints, acc, vel, rad, time, sleep_v):
+	if sleep_v == 1:
+		sleep(10)
+	joints_pose = [joints[0], joints[1], joints[2], joints[3], joints[4], joints[5]]
+	movej(joints_pose, a=0.2, v=0.5, t=0.0, r=0.001)
+	#movej(joints_pose, a=acc, v=vel, t=0.0, r=0.001)
 end
+
 
 #def my_movec(pose_via, pose_to, acc, vel, rad):
 #	if vel != 0:
@@ -271,12 +257,13 @@ def execute_from_buffer():
 		joints = [jp[0], jp[1], jp[2], jp[3], jp[4], jp[5]]
 		params = BUFFER_PARAMS[READ_PTR]
 		acc = params[0]
-		textmsg("acc")
-		textmsg(acc)
 		vel = params[1] * GLOBAL_SPEED
 		rad = params[2]
 		time = params[3]
-		my_movej(joints, acc, vel, rad, time)
+		sleep_v = params[4]
+		#textmsg("rad")
+		#textmsg(rad)
+		my_movej(joints, acc, vel, rad, time, sleep_v)
 	elif msg_command_id == COMMAND_ID_MOVEC:
 		pose1 = BUFFER_POSE[READ_PTR]
 		pose2 = BUFFER_POSE2[READ_PTR]

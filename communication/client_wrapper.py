@@ -113,9 +113,9 @@ class ClientWrapper(object):
     def send_command_movel(self, pose_cartesian, a=0, v=0, r=0, t=0):
         self.send_command(COMMAND_ID_MOVEL, pose_cartesian + [a, v, r, t])
 
-    def send_command_movej(self, pose_joints, a=0, v=0, r=0, t=0):
+    def send_command_movej(self, pose_joints, a=0, v=0, r=0, t=0, s=0):
         print("pose_joints", pose_joints)
-        self.send_command(COMMAND_ID_MOVEJ, pose_joints + [a, v, r, t])
+        self.send_command(COMMAND_ID_MOVEJ, pose_joints + [a, v, r, t, s])
     
     def send_command_movec(self, pose_via, pose_to, a=0, v=0, r=0):
         print("pose va", pose_via, "pose to", pose_to)

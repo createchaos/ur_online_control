@@ -7,7 +7,7 @@ from compas_fab import get
 
 from compas_fab.robots import Configuration
 from .ur import UR
-
+from compas_fab.robots.ur5 import Robot
 
 class UR3(UR):
     """The UR 3 robot class.
